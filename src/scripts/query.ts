@@ -76,7 +76,7 @@ const doAsync = async () => {
   const foo = await prisma.orders_with_latest_status.findFirst({
     where: {
       nonce: '0xc240339744dd481dbc5b50992442d553',
-      chain_id: CHAIN_IDS.ROPSTEN,
+      chain_id: CHAIN_IDS.SEPOLIA,
     },
   })
 

@@ -1,3 +1,5 @@
+import { GCP_PROJECT_ID } from "../../default-config"
+
 // Message interface on the PubSub nodejs client
 export interface PubSubMessage {
   // message.id = ID of the message.
@@ -17,17 +19,17 @@ export interface PubSubMessage {
 }
 
 const PUBSUB_TOPICS = {
-  BlockNumberUpdate: 'projects/traderxyz/topics/api.block-number',
-  ValidateOrderStatus: 'projects/traderxyz/topics/api.order.validate-status',
-  NftMetadataUpdateRequest: 'projects/traderxyz/topics/api.nft-metadata-request',
-  NftOpenSeaCollectionScrape: 'projects/traderxyz/topics/api.nft.opensea.scrape.collection-by-address',
+  BlockNumberUpdate: `projects/${GCP_PROJECT_ID}/topics/api.block-number`,
+  ValidateOrderStatus: `projects/${GCP_PROJECT_ID}/topics/api.order.validate-status`,
+  NftMetadataUpdateRequest: `projects/${GCP_PROJECT_ID}/topics/api.nft-metadata-request`,
+  NftOpenSeaCollectionScrape: `projects/${GCP_PROJECT_ID}/topics/api.nft.opensea.scrape.collection-by-address`,
 }
 
 const PUBSUB_SUBSCRIPTIONS = {
-  ProcessExchangeOrderUpdatesByBlockNumber: 'projects/traderxyz/subscriptions/api.order-status.by-block-number.sub',
-  SaveNewBlockToTable: 'projects/traderxyz/subscriptions/api.block-table.sub',
-  NftMetadataUpdateHandlerSub: 'projects/traderxyz/subscriptions/api.nft-metadata-request.sub',
-  NftOpenSeaCollectionScrape: 'projects/traderxyz/subscriptions/api.nft.opensea.scrape.collection-by-address.sub',
+  ProcessExchangeOrderUpdatesByBlockNumber: `projects/${GCP_PROJECT_ID}/subscriptions/api.order-status.by-block-number.sub`,
+  SaveNewBlockToTable: `projects/${GCP_PROJECT_ID}/subscriptions/api.block-table.sub`,
+  NftMetadataUpdateHandlerSub: `projects/${GCP_PROJECT_ID}/subscriptions/api.nft-metadata-request.sub`,
+  NftOpenSeaCollectionScrape: `projects/${GCP_PROJECT_ID}/subscriptions/api.nft.opensea.scrape.collection-by-address.sub`,
 }
 
 export { PUBSUB_TOPICS, PUBSUB_SUBSCRIPTIONS }

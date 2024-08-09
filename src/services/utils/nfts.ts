@@ -137,7 +137,7 @@ const fetchNftMetadataFromOpenSea = async (contractAddress: string, tokenId: str
     `https://api.opensea.io/api/v1/asset/${contractAddress}/${tokenId}/?include_orders=false`,
     {
       headers: {
-        'X-API-KEY': DEFAULT_OPENSEA_API_KEY,
+        'X-API-KEY': DEFAULT_OPENSEA_API_KEY || '',
         Accept: 'application/json',
       },
     }
@@ -187,7 +187,7 @@ const getNftMetadataForContractOnAnyChain = async (contractAddress: string, chai
   let name: string | undefined = undefined
   try {
     name = await erc721.name()
-  } catch (e) {}
+  } catch (e) { }
 
   return {
     name,
