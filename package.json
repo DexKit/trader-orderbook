@@ -101,6 +101,7 @@
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
     "typecheck": "tsc --noEmit",
+    "prisma:migrate:prod": "npx prisma migrate deploy",
     "prisma:pull": "npx prisma db pull",
     "prisma:generate": "npx prisma generate",
     "zod:generate": "yarn ts-to-zod src/types.ts src/validations.ts",

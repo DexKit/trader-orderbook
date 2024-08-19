@@ -52,9 +52,9 @@ const orderToOrderPayload = (dbOrder: orders_with_latest_status): OrderPayload =
     chainId: dbOrder.chain_id,
     order: modelDbOrderToSdkOrder(dbOrder),
     orderStatus: {
-      status: dbOrder.order_status,
-      transactionHash: dbOrder.transaction_hash,
-      blockNumber: dbOrder.block_number ? Number.parseInt(dbOrder.block_number?.toString()) : null,
+      status: dbOrder?.order_status,
+      transactionHash: dbOrder?.transaction_hash,
+      blockNumber: dbOrder?.block_number ? Number.parseInt(dbOrder.block_number?.toString()) : null,
     },
     metadata: (dbOrder.app_metadata as Record<string, string>) ?? null,
   }
@@ -359,6 +359,9 @@ const createOrderbookRouter = () => {
       }
     }
 
+    const orders = await prisma.orders_with_latest_status.findMany({
+    });
+    console.log(orders);
     const queryRes = await prisma.orders_with_latest_status.findMany({
       where: {
         AND: [...filterParamsAND],
@@ -369,6 +372,8 @@ const createOrderbookRouter = () => {
       take: limit,
       skip: offset,
     })
+    console.log(filterParamsAND)
+    console.log(queryRes);
     const formatted: Array<OrderPayload> = queryRes.map(orderToOrderPayload)
 
     const response = {
@@ -537,6 +542,8 @@ const createOrderbookRouter = () => {
         .json(createApiError('ERROR_FETCHING_ORDER_STATUS', `Promblem looking up order status via 0x v4 ExchangeProxy`))
     }
 
+
+
     const orderDb = nftOrderToDbModel(signedOrder, chainId.toString(), orderMetadataFromApp)
 
     try {
@@ -548,6 +555,7 @@ const createOrderbookRouter = () => {
           date_last_validated: new Date(),
         },
       })
+
 
       const pubsub = new PubSub({ projectId: GCP_PROJECT_ID })
       const blockNumberTopic = pubsub.topic(PUBSUB_TOPICS.ValidateOrderStatus)
@@ -576,11 +584,29 @@ const createOrderbookRouter = () => {
         },
       })
 
-      delete (dbResult as any).system_metadata
+      if (!dbResult) {
 
-      const orderPayload = orderToOrderPayload(dbResult!)
+        delete (orderDb as any).id
 
-      return res.status(200).json(orderPayload)
+        const createdOrder = await prisma.orders_with_latest_status.create({
+          data: {
+            ...orderDb,
+            fees: orderDb.fees ?? [],
+            order_valid: true,
+            date_last_validated: new Date(),
+          },
+
+        })
+
+        const orderPayload = orderToOrderPayload({ ...createdOrder })
+
+        return res.status(200).json(orderPayload)
+
+      } else {
+        const orderPayload = orderToOrderPayload(dbResult!)
+        return res.status(200).json(orderPayload)
+      }
+
     } catch (e: any) {
       console.log(e)
       logger.error('API: Error creating order', { error: e })
