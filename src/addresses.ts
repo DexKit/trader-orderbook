@@ -52,6 +52,10 @@ const addresses: { [key: string]: AddressesForChain | undefined } = {
     exchange: '0xdef1abe32c034e558cdd535791643c58a13acc10',
     wrappedNativeToken: '',
   },
+  '8453': {
+    exchange: '0xdef1c0ded9bec7f1a1670819833240f027b25eff',
+    wrappedNativeToken: '0x4200000000000000000000000000000000000006',
+  },
 }
 
 export { addresses }
